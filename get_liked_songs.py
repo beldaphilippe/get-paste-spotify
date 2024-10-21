@@ -1,5 +1,4 @@
 import spotipy
-import spotipy.util as util
 import os
 import json
 from spotipy.oauth2 import SpotifyOAuth
@@ -10,12 +9,13 @@ redirect_uri = os.environ.get('REDIRECT_URI')
 
 scope = 'user-library-read'
 
+# Authentication
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=client_id,
                                                client_secret=client_secret,
                                                redirect_uri=redirect_uri,
                                                scope=scope))
 
-#get the songs
+# Get the songs
 NB_LIKED_SONGS = 75
 response = {}
 i=0
@@ -24,6 +24,6 @@ while i<NB_LIKED_SONGS:
     response[i] = results
     i+=50
 
-#dump to json
+# Dump to json
 with open('spotify_data.json', 'w') as fp:
     json.dump(response, fp)
