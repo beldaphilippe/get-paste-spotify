@@ -18,6 +18,9 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=client_id,
                                                redirect_uri=redirect_uri,
                                                scope=scope))
 
+current_user = sp.current_user()
+print(f"Utilisateur connecté : {current_user['display_name']}")
+
 uris = []
 
 with open(SONGS_FILE, 'r') as fp:
@@ -29,10 +32,14 @@ for results in response.values():
         uris.append(track['uri'])
 
 i = 0
-increment = 99
-while i < len(uris)+increment:
+increment = 30
+while i+increment <= len(uris):
     try:
-        sp.current_user_saved_tracks_add(uris[i: i+increment])
+        response = sp.current_user_saved_tracks_add(uris[i: i+increment])
+        if response != None:
+            print(f"Réponse de l'API : {response}")
     except spotipy.exceptions.SpotifyException:
         pass
     i += increment
+
+os.remove(".cache")
