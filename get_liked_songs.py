@@ -9,14 +9,16 @@ redirect_uri = os.environ.get('REDIRECT_URI')
 
 scope = 'user-library-read'
 
-# Authentication
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=client_id,
                                                client_secret=client_secret,
                                                redirect_uri=redirect_uri,
                                                scope=scope))
 
-# Get the songs
-NB_LIKED_SONGS = 75
+current_user = sp.current_user()
+print(f"Utilisateur connecté : {current_user['display_name']}")
+
+#get the songs
+NB_LIKED_SONGS = 1000
 response = {}
 i=0
 while i<NB_LIKED_SONGS:
@@ -24,6 +26,8 @@ while i<NB_LIKED_SONGS:
     response[i] = results
     i+=50
 
-# Dump to json
+#dump to json
 with open('spotify_data.json', 'w') as fp:
     json.dump(response, fp)
+
+os.remove(".cache")
