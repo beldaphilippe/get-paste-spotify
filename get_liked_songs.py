@@ -26,30 +26,28 @@ def spotify_authenticate():
 
 
 def get_liked_songs():
-    """ Get the liked songs """
-    MAX_LIKED_SONGS = 8000
-    response = []
-    i=0
-    while i<MAX_LIKED_SONGS:
-        results = sp.current_user_saved_tracks(offset=i, limit=50)
-        if results == []:
-            break
-        response += results
+    """ Returns the list of uris the liked songs """
+    results_uris = []
+    i = 0
+    results = sp.current_user_saved_tracks(offset=i)
+    while results != []:
+        for item in results['items']:
+            results_uris.append(item['track']['uri'])
         i += 50
-    return response
+        results = sp.current_user_saved_tracks(offset=i)
+    return results_uris
 
 
 def get_followed_artists():
     """ Get the followed artists """
-    MAX_FOLLOWED_ARTISTS = 8000
-    response = []
-    i=0
-    while i<MAX_FOLLOWED_ARTISTS:
-        results = sp.current_user_followed_artists(offset=i, limit=20)
-        if results == []:
-            break
-        response += results
+    artists_ids = []
+    i = 0
+    results = sp.current_user_followed_artists(offset=i)
+    while results != []:
+        for item in results['item']:
+            artists_ids.append(item['artist']['id'])
         i += 20
+        results = sp.current_user_followed_artists(offset=i)
     return response
 
 
